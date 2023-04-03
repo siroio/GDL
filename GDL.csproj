@@ -6,6 +6,9 @@
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
+    <RepositoryUrl>https://github.com/siroio/GDL</RepositoryUrl>
+    <PackageTags>0.0.1</PackageTags>
+    <FileVersion>0.0.1</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
