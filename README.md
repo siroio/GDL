@@ -1,5 +1,4 @@
 ## GDL (gallery-dl wrapper)
----
 <br>
 
 ## コマンドライン引数
