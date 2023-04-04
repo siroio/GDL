@@ -3,7 +3,7 @@
 ## used gallery-dl -> [repo](https://github.com/mikf/gallery-dl)
 
 ## コマンドライン引数
-- list [file] : ダウンロードするURLを含むファイルを指定してください。(カンマ スペース 改行, 区切りに対応)
+- -list [file] : ダウンロードするURLを含むファイルを指定してください。(カンマ スペース 改行, 区切りに対応)
 
 ## 設定
 
