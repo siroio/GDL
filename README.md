@@ -1,5 +1,4 @@
 ## GDL ([gallery-dl](https://github.com/mikf/gallery-dl) wrapper)
-<br>
 
 ## used gallery-dl -> [repo](https://github.com/mikf/gallery-dl)
 
