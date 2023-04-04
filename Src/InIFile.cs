@@ -21,6 +21,7 @@ namespace GDL
             return result.ToString();
         }
 
+        // iniファイルからキーと値のペアを取得
         public static Dictionary<string, string> ReadValue(string section, params string[] keys)
         {
             Dictionary<string, string> values = new();

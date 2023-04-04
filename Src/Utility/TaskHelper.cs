@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace GDL
 {
-    internal class TaskHelper
+    public static class TaskHelper
     {
         public static Process GetProcess(string filename, string args = "", bool useShellExecute = false, bool createNoWindow = true)
         {

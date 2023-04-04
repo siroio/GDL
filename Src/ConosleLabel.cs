@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GDL
 {
-    internal class ConsoleLabels
+    public class ConsoleLabels
     {
 
         private readonly Dictionary<string, string> labels = new();

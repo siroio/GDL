@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 
 namespace GDL
 {
-    internal class LoadFIle
+    public static class LoadFile
     {
+        // pathから sepで区切られたファイルをロード
         public static List<string> Load(string path, params string[] sep)
         {
             using var reader = new StreamReader(path);

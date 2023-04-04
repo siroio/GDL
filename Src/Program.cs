@@ -1,15 +1,12 @@
-﻿using Newtonsoft.Json;
-using System.Net.Http;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Text.RegularExpressions;
-using Microsoft.VisualBasic;
 using System.Threading;
 using System.Linq;
-using System.Reflection.Emit;
+using GDL.Src;
+using GDL.Src.Utility;
 
 namespace GDL
 {
@@ -20,58 +17,63 @@ namespace GDL
         private static readonly List<Task> RunningTask = new();
         private static readonly GalleryDL galleryDL = new();
         private static readonly ConsoleLabels labels = new();
+        private static readonly string[] SeparatorList = { "\r\n", "\n", "\r", ",", " " };
+        private static int CurrentDownload = 0;
 
-        private static bool IsInputFile = false;
-        private static int _concurrentDownloads = 0;
 
 
         static async Task Main(string[] args)
         {
-            Console.CancelKeyPress += Console_CancelKeyPress;
+            Console.CancelKeyPress += (s, e) => ExitEvent();
             var exePath = Path.Combine(Environment.CurrentDirectory, "gallery-dl.exe");
-            var currentVersion = galleryDL.GetVersionFromExe(exePath);
-            await galleryDL.CheckAndUpdate(currentVersion);
+            await galleryDL.CheckAndUpdate(galleryDL.GetVersionFromExe(exePath));
             var config = GetConfig();
-
+            bool LoadURLText = false;
+            string textPath = string.Empty;
 
             labels.Position(0, 1);
-            labels.Add("TITLE", "URL\t|\tSTATUS");
+            labels.Add("TITLE", "URL\t|\t\tSTATUS");
 
-            if (args.Contains("-list"))
+            var argList = ArgsHelper.GetArgs(args, "-list");
+
+            if (argList.Count > 0)
             {
-                var pathIndex = Array.IndexOf(args, "-list") + 1;
-                if (pathIndex >= args.Length)
-                {
-                    return;
-                }
+                textPath = PathHelper.GetAbsolute(argList["-list"]);
+                LoadURLText = true;
+                var loadUrls = LoadFile.Load(textPath, SeparatorList);
+                DownloadQueue.AddAll(loadUrls, (url) => !DownloadQueue.Contains(url));
+                DownloadQueue.ForEach((url) => labels.Add(url, $"{url}\tStandby"));
+            }
 
-                var path = args[pathIndex];
-                if (!Path.IsPathRooted(path))
+            while (true)
+            {
+                RunningTask.RemoveAll(task => task.IsCompleted);
+
+                if (!LoadURLText)
                 {
-                    path = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, path));
-                }
-                Console.WriteLine(path);
-                var load = LoadFIle.Load(path, "\r\n", "\n", "\r", ",", " ");
-                foreach (var url in load)
-                {
-                    if (DownloadQueue.Contains(url))
+                    Console.Clear();
+                    labels.WriteText();
+                    Console.Write("Enter URL to download (or 'q' to quit): ");
+                    var urls = Console.ReadLine()?.Trim().Split(SeparatorList, StringSplitOptions.RemoveEmptyEntries);
+
+                    if (urls == null || urls.Length == 0)
                     {
                         continue;
                     }
-                    DownloadQueue.Enqueue(url);
-                    labels.Add(url, $"{url}\tStandby");
-                }
-                IsInputFile = true;
-            }
 
-            var downloadSemaphore = new SemaphoreSlim(config.downloadCount);
-            while (true)
-            {
-
-                if (!IsInputFile)
-                {
-                    foreach (var url in UserInputUrl())
+                    if (urls[0] == "q" || urls[0] == "quit")
                     {
+                        ExitEvent();
+                        return;
+                    }
+
+                    foreach (var url in UserInputUrl(urls))
+                    {
+                        if (string.IsNullOrEmpty(url))
+                        {
+                            continue;
+                        }
+
                         lock (DownloadQueue)
                             DownloadQueue.Enqueue(url);
 
@@ -80,21 +82,20 @@ namespace GDL
                     }
                 }
 
-                IsInputFile = false;
+                LoadURLText = false;
                 while (DownloadQueue.Count > 0 && RunningTask.Count < config.downloadCount)
                 {
                     var urlToDownload = DownloadQueue.Dequeue();
                     RunningTask.Add(StartDownloadTask(urlToDownload, config.args));
                 }
             }
-
         }
 
         private static async Task StartDownloadTask(string url, string customArgs)
         {
             try
             {
-                Interlocked.Increment(ref _concurrentDownloads);
+                Interlocked.Increment(ref CurrentDownload);
                 labels.SetText(url, $"{url}\tDownload");
                 await galleryDL.DownloadAsync(url, customArgs);
                 labels.SetText(url, $"{url}\tDone");
@@ -102,37 +103,15 @@ namespace GDL
             }
             finally
             {
-                Interlocked.Decrement(ref _concurrentDownloads);
+                Interlocked.Decrement(ref CurrentDownload);
             }
         }
 
-        private static string[] UserInputUrl()
+        private static string[] UserInputUrl(string[] input)
         {
-            RunningTask.RemoveAll(task => task.IsCompleted);
-            Console.Clear();
-            labels.WriteText();
-            Console.Write("Enter URL to download (or 'q' to quit): ");
-            var urls = Console.ReadLine()?.Trim().Split(" ");
-
-            if (urls == null || urls.Length == 0)
-            {
-                return Array.Empty<string>();
-            }
-
-            if (urls[0] == "q" || urls[0] == "quit")
-            {
-                return Array.Empty<string>();
-            }
-
-            foreach (var url in urls)
-            {
-                if (string.IsNullOrEmpty(url) || !RegexUtility.Match(url, @"http(s)?://([\w-]+\.)+[\w-]+(/[\w- ./?%&=]*)?"))
-                {
-                    return Array.Empty<string>();
-                }
-            }
-
-            return urls;
+            var nonNullOrEmpty = input.All((i) => !string.IsNullOrEmpty(i));
+            var isURLS = RegexUtility.MatchArray(input, @"http(s)?://([\w-]+\.)+[\w-]+(/[\w- ./?%&=]*)?");
+            return nonNullOrEmpty && isURLS && input.Length > 0 ? input : Array.Empty<string>();
         }
 
         public static (string args, int downloadCount) GetConfig()
@@ -156,7 +135,7 @@ namespace GDL
             return (args, result);
         }
 
-        private static void Console_CancelKeyPress(object? sender, ConsoleCancelEventArgs e)
+        private static void ExitEvent()
         {
             Console.Clear();
             Console.WriteLine("Exiting...");
@@ -168,7 +147,8 @@ namespace GDL
                     process.Kill();
                 }
             }
-            e.Cancel = false;
+
+            Environment.Exit(0);
         }
     }
 }
