@@ -118,8 +118,16 @@ namespace GDL
         {
             string args = "CustomArgs";
             string dCount = "DownloadCount";
+            var filePath = Path.Combine(Environment.CurrentDirectory, "cnf.ini");
 
-            InIFile.Path = Path.Combine(Environment.CurrentDirectory, "cnf.ini");
+            if (!File.Exists(filePath))
+            {
+                MsgBoxHelper.ShowMessage("Can't find cnf.ini", "Error");
+                ExitEvent();
+                return ("", -1);
+            }
+
+            InIFile.Path = filePath;
             var config = InIFile.ReadValue("Config", args, dCount);
 
             string argString = string.Join(" ", config[args]);
