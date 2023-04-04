@@ -1,20 +1,21 @@
-## GDL (gallery-dl wrapper)
-<br>
+## GDL ([gallery-dl](https://github.com/mikf/gallery-dl) wrapper)
 
-## ƒRƒ}ƒ“ƒhƒ‰ƒCƒ“ˆø”
-- list [file] : ƒ_ƒEƒ“ƒ[ƒh‚·‚éURL‚ðŠÜ‚Þƒtƒ@ƒCƒ‹‚ðŽw’è‚µ‚Ä‚­‚¾‚³‚¢B(ƒJƒ“ƒ} ƒXƒy[ƒX ‰üs, ‹æØ‚è‚É‘Î‰ž)
+## used gallery-dl -> [repo](https://github.com/mikf/gallery-dl)
 
-## Ý’è
+## ã‚³ãƒžãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³å¼•æ•°
+- -list [file] : ãƒ€ã‚¦ãƒ³ãƒ­ãƒ¼ãƒ‰ã™ã‚‹URLã‚’å«ã‚€ãƒ•ã‚¡ã‚¤ãƒ«ã‚’æŒ‡å®šã—ã¦ãã ã•ã„ã€‚(ã‚«ãƒ³ãƒž ã‚¹ãƒšãƒ¼ã‚¹ æ”¹è¡Œ, åŒºåˆ‡ã‚Šã«å¯¾å¿œ)
 
-#### cnf.ini ƒtƒ@ƒCƒ‹“à‚ÉÝ’è‚ð‘‚«ž‚ñ‚Å‚­‚¾‚³‚¢B
+## è¨­å®š
 
-- CustomArgs : gallery-dl‚É’¼Úˆø”‚ð“n‚¹‚Ü‚·B
-- DownloadCount : “¯Žž‚Éƒ_ƒEƒ“ƒ[ƒho—ˆ‚é”‚ðŽw’è‚µ‚Ü‚·B
+#### cnf.ini ãƒ•ã‚¡ã‚¤ãƒ«å†…ã«è¨­å®šã‚’æ›¸ãè¾¼ã‚“ã§ãã ã•ã„ã€‚
 
-## Žg—p•û–@
+- CustomArgs : gallery-dlã«ç›´æŽ¥å¼•æ•°ã‚’æ¸¡ã›ã¾ã™ã€‚
+- DownloadCount : åŒæ™‚ã«ãƒ€ã‚¦ãƒ³ãƒ­ãƒ¼ãƒ‰å‡ºæ¥ã‚‹æ•°ã‚’æŒ‡å®šã—ã¾ã™ã€‚
+
+## ä½¿ç”¨æ–¹æ³•
 - ```> ./GDL.exe -list URL.txt```  
 or  
 - ```> ./GDL.exe```
 
 <br>
-I—¹‚·‚é‚É‚Í q ‚© quit ‚ð“ü—Í‚µ‚Ä‚­‚¾‚³‚¢B
+çµ‚äº†ã™ã‚‹ã«ã¯ q ã‹ quit ã‚’å…¥åŠ›ã—ã¦ãã ã•ã„ã€‚
