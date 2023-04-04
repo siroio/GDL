@@ -58,13 +58,12 @@ namespace GDL
 
         public string GetVersionFromExe(string exePath)
         {
+            ExePath = exePath;
             if (!File.Exists(exePath))
             {
                 return string.Empty;
             }
-
             var versionInfo = FileVersionInfo.GetVersionInfo(exePath);
-            ExePath = exePath;
             return versionInfo.FileVersion ?? string.Empty;
         }
 
