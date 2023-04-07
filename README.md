@@ -14,7 +14,6 @@
 
 ## 使用方法
 - ```> ./GDL.exe -list URL.txt```  
-or  
 - ```> ./GDL.exe```
 
 <br>
