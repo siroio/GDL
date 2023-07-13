@@ -127,7 +127,7 @@ namespace GDL.Src
         private static string[] UserInputUrl(string[] input)
         {
             var nonNullOrEmpty = input.All((i) => !string.IsNullOrEmpty(i));
-            var isURLS = RegexUtility.MatchArray(input, @"http(s)?://([\w-]+\.)+[\w-]+(/[\w- ./?%&=]*)?");
+            var isURLS = RegexHelper.MatchArray(input, @"http(s)?://([\w-]+\.)+[\w-]+(/[\w- ./?%&=]*)?");
             return nonNullOrEmpty && isURLS && input.Length > 0 ? input : Array.Empty<string>();
         }
 
@@ -152,7 +152,7 @@ namespace GDL.Src
             var config = InIFile.ReadValue("Config", args, dCount);
 
             string argString = string.Join(" ", config[args]);
-            bool isArgs = RegexUtility.Match(argString, @"^(-{1,2}\w+\s+)+(-{1,2}\w+)?$") || argString == "NONE";
+            bool isArgs = RegexHelper.Match(argString, @"^(-{1,2}\w+\s+)+(-{1,2}\w+)?$") || argString == "NONE";
 
             if (!isArgs || !int.TryParse(config[dCount], out var result))
             {
