@@ -18,6 +18,10 @@ namespace GDL
         private const string API_URL = $"https://api.github.com/repos/{Owner}/{Repo}/releases/latest";
         public string ExePath { get; private set; } = string.Empty;
 
+        /// <summary>
+        /// 最新バージョンのリンクを取得
+        /// </summary>
+        /// <returns>DLリンク</returns>
         public async Task<string> GetLatestReleaseDownloadLink()
         {
             using var httpClient = new HttpClient();
@@ -34,8 +38,13 @@ namespace GDL
             return asset?.BrowserDownloadUrl ?? string.Empty;
         }
 
+        /// <summary>
+        /// アップデートのチェック
+        /// </summary>
+        /// <param name="currentVersion"></param>
         public async Task CheckAndUpdate(string currentVersion)
         {
+            // リンクの取得
             var dlLink = await GetLatestReleaseDownloadLink();
             if (string.IsNullOrEmpty(dlLink))
             {
@@ -43,8 +52,12 @@ namespace GDL
                 return;
             }
 
-            var latestVersion = GetVersionFromDownloadLink(dlLink);
+            // リンクからバージョンの取得
+            var regex = new Regex(@"/v(\d+\.\d+\.\d+)/gallery-dl\.exe$");
+            var match = regex.Match(dlLink);
+            var latestVersion = !match.Success ? string.Empty : match.Groups[1].Value;
 
+            // アップデートできるならする
             if (string.IsNullOrEmpty(currentVersion) || (latestVersion.CompareTo(currentVersion) > 0))
             {
                 Console.WriteLine("Downloading the latest release...");
@@ -56,6 +69,11 @@ namespace GDL
             }
         }
 
+        /// <summary>
+        /// 実行ファイルからバージョンを取得
+        /// </summary>
+        /// <param name="exePath"></param>
+        /// <returns>現在バージョン</returns>
         public string GetVersionFromExe(string exePath)
         {
             ExePath = exePath;
@@ -65,18 +83,6 @@ namespace GDL
             }
             var versionInfo = FileVersionInfo.GetVersionInfo(exePath);
             return versionInfo.FileVersion ?? string.Empty;
-        }
-
-        public string GetVersionFromDownloadLink(string downloadLink)
-        {
-            var regex = new Regex(@"/v(\d+\.\d+\.\d+)/gallery-dl\.exe$");
-            var match = regex.Match(downloadLink);
-            if (!match.Success)
-            {
-                return string.Empty;
-            }
-
-            return match.Groups[1].Value;
         }
 
         public async Task DownloadLatestRelease(string downloadLink)
@@ -114,7 +120,7 @@ namespace GDL
 
         }
 
-        internal async Task<int> DownloadAsync(string url, string args)
+        public async Task<int> DownloadAsync(string url, string args)
         {
             var arg = $"{url} {args}";
             var proc = TaskHelper.GetProcess(ExePath, arg);

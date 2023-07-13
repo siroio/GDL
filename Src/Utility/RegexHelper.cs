@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 
 namespace GDL
 {
-    public static class RegexUtility
+    public static class RegexHelper
     {
         public static bool Match(string target, string pattern, Action<Regex, bool>? callback = null)
         {
