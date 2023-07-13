@@ -1,6 +1,6 @@
 ## GDL ([gallery-dl](https://github.com/mikf/gallery-dl) wrapper)
 
-## used gallery-dl -> [repo](https://github.com/mikf/gallery-dl)
+## used gallery-dl -> [Github](https://github.com/mikf/gallery-dl)
 
 ## コマンドライン引数
 - -list [file] : ダウンロードするURLを含むファイルを指定してください。(カンマ スペース 改行, 区切りに対応)
@@ -14,7 +14,6 @@
 
 ## 使用方法
 - ```> ./GDL.exe -list URL.txt```  
-or  
 - ```> ./GDL.exe```
 
 <br>
