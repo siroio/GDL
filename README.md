@@ -9,7 +9,7 @@
 
 #### cnf.ini ファイル内に設定を書き込んでください。
 
-- CustomArgs : gallery-dlに直接引数を渡せます。
+- CustomArgs : gallery-dlに引数を渡せます。
 - DownloadCount : 同時にダウンロード出来る数を指定します。
 
 ## 使用方法
