@@ -1,7 +1,5 @@
 ## GDL ([gallery-dl](https://github.com/mikf/gallery-dl) wrapper)
 
-## used gallery-dl -> [Github](https://github.com/mikf/gallery-dl)
-
 ## コマンドライン引数
 - -list [file] : ダウンロードするURLを含むファイルを指定してください。(カンマ スペース 改行, 区切りに対応)
 
